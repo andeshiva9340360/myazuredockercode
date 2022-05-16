@@ -14,8 +14,7 @@ spec:
     spec:
       containers:
       - name: myazuredockercode
-        image: myacrrepo3120.azurecr.io/andeshiva9340360/
-myazuredockercode:#{Build.BuildId}#
+        image: myacrrepo3120.azurecr.io/andeshiva9340360/myazuredockercode:#{Build.BuildId}#
         ports:
         - containerPort: 5000
 # service type loadbalancer       
