@@ -1,10 +1,19 @@
-FROM maven:3.8-ibmjava-8-alpine AS build
-WORKDIR /home/app
-COPY . /home/app
-RUN mvn -f /home/app/pom.xml clean package
+# this is my base image
+FROM alpine:3.5
 
-FROM openjdk:8-jdk-alpine
-VOLUME /tmp
+# Install python and pip
+RUN apk add --update py2-pip
+
+# install Python modules needed by the Python app
+COPY requirements.txt /usr/src/app/
+RUN pip install --no-cache-dir -r /usr/src/app/requirements.txt
+
+# copy files required for the app to run
+COPY app.py /usr/src/app/
+COPY templates/index.html /usr/src/app/templates/
+
+# tell the port number the container should expose
 EXPOSE 5000
-COPY --from=build /home/app/target/*.jar app.jar
-ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]
+
+# run the application
+CMD ["python", "/usr/src/app/app.py"]
